@@ -1,20 +1,42 @@
-var express = require('express'),
-  bodyParser = require('body-parser'),
-  db = require('./models');
+
+
+// require Express, create an Express app
+var express = require('express');
+var app = express();
+
+// serve the public directory as a static file directory
+app.use(express.static('public'));
+
+// Require the models directory in server.js
+var db = require('./models');
 var controllers = require('./controllers');
 
-var app = express();
-// server.js
+/**********
+ * ROUTES *
+**********/
+
+/*
+  HTML ENDPOINTS
+*/
+
+// add a route so your server will respond to GET / by serving index.html
+app.get('/', function homepage (req, res) {
+  res.sendFile('views/index.html', { root : __dirname });
+});
+
+/*
+ * JSON API ENDPOINTS
+ */
+
+// create a new route for GET /api with callback controllers.api.index
 app.get('/api', controllers.api.index);
+app.get('/api/albums', controllers.albums.index);
 
- app.use(express.static('public'));
+/**********
+ * SERVER *
+**********/
 
-  app.get('/', function (req, res) {
-    res.sendFile('views/index.html' , { root : __dirname});
-  });
-
-
-
-  app.listen(process.env.PORT || 3000, function () {
-    console.log('Example app listening at http://localhost:3000/');
-  })
+// tell the app to listen on a port so that the server will start
+app.listen(process.env.PORT || 3000, function () {
+  console.log('Express server is running on http://localhost:3000/');
+});
