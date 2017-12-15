@@ -5,14 +5,22 @@ function index(req, res) {
   // access database and pull out all albums
   console.log("index called");
   db.Album.find({}, function(err, allAlbums) {
-    if(err){console.log("The error in albumsController ",err);}
+    if(err){console.log("The error in index method of albumsController ",err);}
     else { console.log(allAlbums);}
     res.json(allAlbums);
   });
 }
 // POST /api/albums
 function create(req, res) {
-  // create an album based on request body and send it back as JSON
+  console.log(`inside create method ${req.body}`);
+var genres = req.body.genres.split(', ');
+req.body.genres = genres;
+console.log(`genres is ${req.body.genres}`);
+
+db.Album.create(req.body, function(err, album) {
+  if (err) { console.log('error occured in create method of controller', err); }
+  res.json(album);
+});
 }
 
 // GET /api/albums/:albumId
